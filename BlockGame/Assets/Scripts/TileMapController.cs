@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Linq;
 using Unity.Mathematics;
 using Unity.VisualScripting;
@@ -18,6 +19,8 @@ public class TileMapController : MonoBehaviour
     [SerializeField]
     Tile[] tiles;
 
+    bool pieceFreezeActive = false;
+
     float timeSinceMove = 0.0f;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -31,6 +34,11 @@ public class TileMapController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (pieceFreezeActive)
+        {
+            return;
+        }
+
         timeSinceMove += Time.deltaTime;
         if (timeSinceMove >= 1.0f)
         {
@@ -72,5 +80,19 @@ public class TileMapController : MonoBehaviour
             tiles_[i] = tile;
         }
         return tiles_;
+    }
+
+    public void setPieceFreeze()
+    {
+        if (pieceFreezeActive) {  return; }
+        pieceFreezeActive = true;
+        Debug.Log("Piece frozen");
+        disablePieceFreeze();
+    }
+
+    IEnumerable disablePieceFreeze()
+    {
+        yield return new WaitForSeconds(2);
+        pieceFreezeActive=false;
     }
 }
