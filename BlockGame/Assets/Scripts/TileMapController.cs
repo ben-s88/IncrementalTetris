@@ -1,15 +1,17 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
 using UnityEngine.UIElements;
 
 public class TileMapController : MonoBehaviour
 {
     Vector3Int[] currentTiles;
-    Vector2Int currentPiecePos;
+    bool discardPiece;
     Vector3Int[] ITiles = new Vector3Int[] { new(0, 0, 0), new(-1, 0, 0), new(1, 0, 0), new(2, 0, 0) };
     [SerializeField]
     Tilemap TM;
@@ -34,6 +36,15 @@ public class TileMapController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Keyboard.current.aKey.wasPressedThisFrame && currentTiles != null)
+        {
+            moveLeft();
+        }
+        else if (Keyboard.current.dKey.wasPressedThisFrame && currentTiles != null)
+        {
+            moveRight();
+        }
+
         if (pieceFreezeActive)
         {
             return;
@@ -42,14 +53,31 @@ public class TileMapController : MonoBehaviour
         timeSinceMove += Time.deltaTime;
         if (timeSinceMove >= 1.0f)
         {
-            TM.SetTiles(currentTiles, getTileList(currentTiles.Length, null));
+            if (currentTiles == null) // if the tile was discarded spawn a new one
+            {
+                spawnPieceAt(ITiles, new Vector2Int(2, 15));
+            }
+
+            TM.SetTiles(currentTiles, getTileList(currentTiles.Length, null)); //set the pre update positions on the tile map blank
 
             for (int i = 0; i < currentTiles.Length; i++)
             {
-                currentTiles[i] += new Vector3Int(0, -1, 0);
+                currentTiles[i] += new Vector3Int(0, -1, 0); //transform all tiles downward
+                if (currentTiles[i].y  == 0) { discardPiece = true; } // if the bottom of the screen declare the tile to be discarded/placed
             }
 
-            TM.SetTiles(currentTiles, getTileList(currentTiles.Length, tiles[0]));
+            TM.SetTiles(currentTiles, getTileList(currentTiles.Length, tiles[0])); // set the new positions to the selected tile asset
+
+            if (tileCollision(currentTiles))
+            {
+                discardPiece = true;
+            }
+
+            if (discardPiece)
+            {
+                currentTiles = null; //set tile to null so we know to create a new one
+                discardPiece = false;
+            }
 
             timeSinceMove = 0.0f;
         }
@@ -62,14 +90,110 @@ public class TileMapController : MonoBehaviour
 
     void spawnPieceAt(Vector3Int[] positions, Vector2Int startPos)
     {
-        currentTiles = positions;
-        currentPiecePos = startPos;
+        currentTiles = (Vector3Int[])positions.Clone();
         for (int i = 0; i < currentTiles.Length; i++)
         {
             currentTiles[i] += new Vector3Int(startPos.x, startPos.y, 0);
         }
         TM.SetTiles(currentTiles, getTileList(positions.Length, tiles[0]));
         
+    }
+
+    void moveLeft()
+    {
+        int lowestX = 10000;
+        List<Vector3Int> leftmostTiles = new List<Vector3Int>();
+
+        for (int i = 0; i < currentTiles.Length; i++)
+        {
+            if (currentTiles[i].x < lowestX)
+            {
+                leftmostTiles = new List<Vector3Int>();
+                lowestX = currentTiles[i].x;
+            }
+
+            if (currentTiles[i].x == lowestX)
+            {
+                leftmostTiles.Add(currentTiles[i]);
+            }
+        }
+
+        foreach (Vector3Int t in leftmostTiles)
+        {
+            if (TM.GetTile(t + new Vector3Int(-1, 0, 0)) != null) { return; }
+        }
+
+        TM.SetTiles(currentTiles, getTileList(currentTiles.Length, null));
+
+        for (int i = 0; i < currentTiles.Length; i++)
+        {
+            currentTiles[i] += new Vector3Int(-1, 0, 0);
+        }
+
+        TM.SetTiles(currentTiles, getTileList(currentTiles.Length, tiles[0]));
+    }
+
+    void moveRight()
+    {
+        int highestX = -10000;
+        List<Vector3Int> rightmostTiles = new List<Vector3Int>();
+
+        for (int i = 0; i < currentTiles.Length; i++)
+        {
+            if (currentTiles[i].x > highestX)
+            {
+                rightmostTiles = new List<Vector3Int>();
+                highestX = currentTiles[i].x;
+            }
+
+            if (currentTiles[i].x == highestX)
+            {
+                rightmostTiles.Add(currentTiles[i]);
+            }
+        }
+
+        foreach (Vector3Int t in rightmostTiles)
+        {
+            if (TM.GetTile(t + new Vector3Int(1, 0, 0)) != null) { return; }
+        }
+
+        TM.SetTiles(currentTiles, getTileList(currentTiles.Length, null));
+
+        for (int i = 0; i < currentTiles.Length; i++)
+        {
+            currentTiles[i] += new Vector3Int(1, 0, 0);
+        }
+
+        TM.SetTiles(currentTiles, getTileList(currentTiles.Length, tiles[0]));
+    }
+
+    //make a send piece down function
+
+    bool tileCollision(Vector3Int[] currTiles)
+    {
+        int lowestY = 10000;
+        List<Vector3Int> lowestTiles = new List<Vector3Int>();
+
+        for (int i = 0;i < currentTiles.Length; i++)
+        {
+            if (currTiles[i].y < lowestY)
+            {
+                lowestTiles = new List<Vector3Int>();
+                lowestY = currTiles[i].y;
+            }
+
+            if (currTiles[i].y == lowestY)
+            {
+                lowestTiles.Add(currTiles[i]);
+            }
+        }
+
+        foreach (Vector3Int t in lowestTiles)
+        {
+            if (TM.GetTile(t - new Vector3Int(0, 1, 0)) != null) { return true; }
+        }
+
+        return false;
     }
 
     Tile[] getTileList(int length, Tile tile)
