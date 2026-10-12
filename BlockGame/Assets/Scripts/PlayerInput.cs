@@ -6,7 +6,7 @@ using TouchPhase = UnityEngine.TouchPhase;
 
 public class PlayerInput : MonoBehaviour
 {
-    Vector2 lastTouchFrame;
+    Vector2 touchStart;
     int fingerMovement;
     public int moveFactor = 10; //set what percentage of the screen the touch must move to register a piece move
     int factoredW, factoredH; 
@@ -44,13 +44,21 @@ public class PlayerInput : MonoBehaviour
             switch (touch.phase)
             {
                 case TouchPhase.Began:
-                    lastTouchFrame = touch.position;
+                    Debug.Log("First touch");
+                    touchStart = touch.position;
                     break;
 
                 case TouchPhase.Moved:
-                    if (math.abs(touch.position.y - lastTouchFrame.y) > factoredW)
+                    Debug.Log("Touch moved");
+                    if (touch.position.x - touchStart.x > factoredW)
                     {
-
+                        tmc.moveRight();
+                        touchStart = touch.position;
+                    }
+                    else if (touch.position.x - touchStart.x < -factoredW)
+                    {
+                        tmc.moveLeft();
+                        touchStart = touch.position;
                     }
                     break;
             }
@@ -60,7 +68,7 @@ public class PlayerInput : MonoBehaviour
         {
             Accelerometer acc = Accelerometer.current;
             Vector3 value = acc.acceleration.ReadValue();
-            if (value.magnitude > 0.5f)
+            if (value.magnitude > 3.0f)
             {
                 Debug.Log(value.magnitude);
                 tmc.setPieceFreeze();

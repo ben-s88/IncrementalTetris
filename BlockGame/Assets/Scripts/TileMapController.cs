@@ -39,10 +39,12 @@ public class TileMapController : MonoBehaviour
         if (Keyboard.current.aKey.wasPressedThisFrame && currentTiles != null)
         {
             moveLeft();
+            discardPiece = tileCollision(currentTiles);
         }
         else if (Keyboard.current.dKey.wasPressedThisFrame && currentTiles != null)
         {
             moveRight();
+            discardPiece = tileCollision(currentTiles);
         }
 
         if (pieceFreezeActive)
@@ -53,9 +55,11 @@ public class TileMapController : MonoBehaviour
         timeSinceMove += Time.deltaTime;
         if (timeSinceMove >= 1.0f)
         {
-            if (currentTiles == null) // if the tile was discarded spawn a new one
+            if (discardPiece) // if the tile was discarded spawn a new one
             {
+                currentTiles = null;
                 spawnPieceAt(ITiles, new Vector2Int(2, 15));
+                discardPiece = false;
             }
 
             TM.SetTiles(currentTiles, getTileList(currentTiles.Length, null)); //set the pre update positions on the tile map blank
@@ -71,13 +75,13 @@ public class TileMapController : MonoBehaviour
             if (tileCollision(currentTiles))
             {
                 discardPiece = true;
-            }
+            } 
 
-            if (discardPiece)
+            /*if (discardPiece)
             {
                 currentTiles = null; //set tile to null so we know to create a new one
                 discardPiece = false;
-            }
+            }*/
 
             timeSinceMove = 0.0f;
         }
@@ -99,7 +103,7 @@ public class TileMapController : MonoBehaviour
         
     }
 
-    void moveLeft()
+    public void moveLeft()
     {
         int lowestX = 10000;
         List<Vector3Int> leftmostTiles = new List<Vector3Int>();
@@ -120,6 +124,7 @@ public class TileMapController : MonoBehaviour
 
         foreach (Vector3Int t in leftmostTiles)
         {
+            if (t.x == -1) { return; }
             if (TM.GetTile(t + new Vector3Int(-1, 0, 0)) != null) { return; }
         }
 
@@ -133,7 +138,7 @@ public class TileMapController : MonoBehaviour
         TM.SetTiles(currentTiles, getTileList(currentTiles.Length, tiles[0]));
     }
 
-    void moveRight()
+    public void moveRight()
     {
         int highestX = -10000;
         List<Vector3Int> rightmostTiles = new List<Vector3Int>();
@@ -154,6 +159,7 @@ public class TileMapController : MonoBehaviour
 
         foreach (Vector3Int t in rightmostTiles)
         {
+            if (t.x == 8) { return; }
             if (TM.GetTile(t + new Vector3Int(1, 0, 0)) != null) { return; }
         }
 
