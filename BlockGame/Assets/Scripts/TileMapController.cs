@@ -1,15 +1,21 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 using Unity.Mathematics;
 using Unity.VisualScripting;
+using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
 using UnityEngine.UIElements;
+using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 public class TileMapController : MonoBehaviour
 {
+    int vibrationIterator = 0;
+    public PlayerInput PI;
     Vector3Int[] currentTiles;
     bool discardPiece;
     Vector3Int[] ITiles = new Vector3Int[] { new(0, 0, 0), new(-1, 0, 0), new(1, 0, 0), new(2, 0, 0) };
@@ -24,6 +30,7 @@ public class TileMapController : MonoBehaviour
     bool pieceFreezeActive = false;
 
     float timeSinceMove = 0.0f;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -57,8 +64,10 @@ public class TileMapController : MonoBehaviour
         {
             if (discardPiece) // if the tile was discarded spawn a new one
             {
+                PI.doVibration(vibrationIterator);
                 currentTiles = null;
                 spawnPieceAt(ITiles, new Vector2Int(2, 15));
+                vibrationIterator++;
                 discardPiece = false;
             }
 
@@ -222,7 +231,7 @@ public class TileMapController : MonoBehaviour
 
     IEnumerable disablePieceFreeze()
     {
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSecondsRealtime(2f);
         pieceFreezeActive=false;
     }
 }

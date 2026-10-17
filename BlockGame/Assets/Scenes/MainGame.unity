@@ -158,85 +158,12 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -2.31, y: -5, z: 0}
-  m_LocalScale: {x: 0.45, y: 0.45, z: 0.45}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1813342097}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &277323723
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4355514412898332305, guid: 8a2762c69e3b9a74ea151c72e7c779de, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0.5540353
-      objectReference: {fileID: 0}
-    - target: {fileID: 4355514412898332305, guid: 8a2762c69e3b9a74ea151c72e7c779de, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 2.0308917
-      objectReference: {fileID: 0}
-    - target: {fileID: 4355514412898332305, guid: 8a2762c69e3b9a74ea151c72e7c779de, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4355514412898332305, guid: 8a2762c69e3b9a74ea151c72e7c779de, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4355514412898332305, guid: 8a2762c69e3b9a74ea151c72e7c779de, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4355514412898332305, guid: 8a2762c69e3b9a74ea151c72e7c779de, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4355514412898332305, guid: 8a2762c69e3b9a74ea151c72e7c779de, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4355514412898332305, guid: 8a2762c69e3b9a74ea151c72e7c779de, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4355514412898332305, guid: 8a2762c69e3b9a74ea151c72e7c779de, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4355514412898332305, guid: 8a2762c69e3b9a74ea151c72e7c779de, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4495512054503327390, guid: 8a2762c69e3b9a74ea151c72e7c779de, type: 3}
-      propertyPath: m_Name
-      value: QuadBase
-      objectReference: {fileID: 0}
-    - target: {fileID: 4495512054503327390, guid: 8a2762c69e3b9a74ea151c72e7c779de, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5980884538913550491, guid: 8a2762c69e3b9a74ea151c72e7c779de, type: 3}
-      propertyPath: m_Materials.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5980884538913550491, guid: 8a2762c69e3b9a74ea151c72e7c779de, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 9a265b24e84223546b04cef2c5aa2cd4, type: 2}
-    - target: {fileID: 5980884538913550491, guid: 8a2762c69e3b9a74ea151c72e7c779de, type: 3}
-      propertyPath: 'm_Materials.Array.data[1]'
-      value: 
-      objectReference: {fileID: 2100000, guid: a9b87c935e161c84bbb0522ec2d2c24a, type: 2}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 8a2762c69e3b9a74ea151c72e7c779de, type: 3}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -504,6 +431,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e07ef70547a64c4e82df27d613a6e0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  PI: {fileID: 0}
   TM: {fileID: 1813342100}
   grid: {fileID: 256719658}
   tiles:
@@ -669,9 +597,15 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 98313b191396b0449beb5b6707f63d75, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: '::'
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInput
   moveFactor: 10
   TileMap: {fileID: 1813342096}
+  cmp:
+    IOS_HapticPattern: []
+    Android_HapticPattern:
+    - Delay: 0
+      PulseTime: 300
+      PulseStrength: 49
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -679,5 +613,4 @@ SceneRoots:
   - {fileID: 519420032}
   - {fileID: 619394802}
   - {fileID: 2019641245}
-  - {fileID: 277323723}
   - {fileID: 256719659}

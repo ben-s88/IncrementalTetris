@@ -1,3 +1,4 @@
+using Solo.MOST_IN_ONE;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -8,16 +9,27 @@ public class PlayerInput : MonoBehaviour
 {
     Vector2 touchStart;
     int fingerMovement;
-    public int moveFactor = 10; //set what percentage of the screen the touch must move to register a piece move
+    public int moveFactor = 8; //set what percentage of the screen the touch must move to register a piece move
     int factoredW, factoredH; 
     [SerializeField]
     GameObject TileMap;
     TileMapController tmc;
     bool gyro = true;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    bool vibration = false;
+
+    public MOST_HapticFeedback.CustomHapticPattern cmp;
     void Start()
     {
         tmc = TileMap.GetComponent<TileMapController>();
+        tmc.PI = this;
+        if (SystemInfo.supportsVibration)
+        {
+            vibration = true;
+        }
+        else
+        {
+            Debug.Log("Device does not support vibrations");
+        }
         if (SystemInfo.supportsAccelerometer)
         {
             gyro = true;
@@ -44,12 +56,10 @@ public class PlayerInput : MonoBehaviour
             switch (touch.phase)
             {
                 case TouchPhase.Began:
-                    Debug.Log("First touch");
                     touchStart = touch.position;
                     break;
 
                 case TouchPhase.Moved:
-                    Debug.Log("Touch moved");
                     if (touch.position.x - touchStart.x > factoredW)
                     {
                         tmc.moveRight();
@@ -75,5 +85,14 @@ public class PlayerInput : MonoBehaviour
             }
         }
         
+    }
+
+    public void doVibration(int strength)
+    {
+        if (vibration)
+        {
+            cmp.Android_HapticPattern[0].PulseStrength = 50 + strength * 30;
+            MOST_HapticFeedback.GeneratePattern(cmp);
+        }
     }
 }
