@@ -36,7 +36,7 @@ public class TileMapController : MonoBehaviour
     {
         cam = Camera.main;
         repositionGrid();
-        spawnPieceAt(ITiles, new Vector2Int(2, 15));
+        spawnPieceAt(ITiles, new Vector2Int(0, 15));
         //TM.SetTile(new Vector3Int(0, 0, 0), tiles[0]);
     }
 
@@ -66,7 +66,7 @@ public class TileMapController : MonoBehaviour
             {
                 PI.doVibration(vibrationIterator);
                 currentTiles = null;
-                spawnPieceAt(ITiles, new Vector2Int(2, 15));
+                spawnPieceAt(ITiles, new Vector2Int(0, 15));
                 vibrationIterator++;
                 discardPiece = false;
             }
@@ -98,7 +98,8 @@ public class TileMapController : MonoBehaviour
 
     void repositionGrid()
     {
-        grid.transform.position = cam.ViewportToWorldPoint(new Vector3(0.1f, 0.05f, 10));
+        grid.transform.position = cam.ViewportToWorldPoint(new Vector3(0.5f, 0.15f, 10));
+        grid.transform.position -= new Vector3(transform.lossyScale.x, 0, 0);
     }
 
     void spawnPieceAt(Vector3Int[] positions, Vector2Int startPos)
@@ -133,7 +134,7 @@ public class TileMapController : MonoBehaviour
 
         foreach (Vector3Int t in leftmostTiles)
         {
-            if (t.x == -1) { return; }
+            if (t.x == -3) { return; }
             if (TM.GetTile(t + new Vector3Int(-1, 0, 0)) != null) { return; }
         }
 
@@ -168,7 +169,7 @@ public class TileMapController : MonoBehaviour
 
         foreach (Vector3Int t in rightmostTiles)
         {
-            if (t.x == 8) { return; }
+            if (t.x == 5) { return; }
             if (TM.GetTile(t + new Vector3Int(1, 0, 0)) != null) { return; }
         }
 
@@ -225,6 +226,7 @@ public class TileMapController : MonoBehaviour
     {
         if (pieceFreezeActive) {  return; }
         pieceFreezeActive = true;
+        Debug.Log("Piece freeze enabled");
         Debug.Log("Piece frozen");
         disablePieceFreeze();
     }
@@ -232,6 +234,7 @@ public class TileMapController : MonoBehaviour
     IEnumerable disablePieceFreeze()
     {
         yield return new WaitForSecondsRealtime(2f);
+        Debug.Log("Piece freeze disabled");
         pieceFreezeActive=false;
     }
 }
