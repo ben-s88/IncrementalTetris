@@ -12,7 +12,7 @@ public class UIManager : MonoBehaviour
         string a = PlayerPrefs.GetInt("HScore").ToString();
         if (a != null)
         {
-            HScoreLable.text = "High Score:" + "\n" + a;
+            HScoreLable.text = "High Score: " + a;
         }
         
     }

@@ -76,7 +76,7 @@ public class TileMapController : MonoBehaviour
             for (int i = 0; i < currentTiles.Length; i++)
             {
                 currentTiles[i] += new Vector3Int(0, -1, 0); //transform all tiles downward
-                if (currentTiles[i].y  == 0) { discardPiece = true; } // if the bottom of the screen declare the tile to be discarded/placed
+                if (currentTiles[i].y  == 1) { discardPiece = true; } // if the bottom of the screen declare the tile to be discarded/placed
             }
 
             TM.SetTiles(currentTiles, getTileList(currentTiles.Length, tiles[0])); // set the new positions to the selected tile asset
