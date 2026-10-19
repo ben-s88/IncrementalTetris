@@ -14,7 +14,7 @@ public class PlayerInput : MonoBehaviour
     [SerializeField]
     GameObject TileMap;
     TileMapController tmc;
-    bool gyro = true;
+    bool accel = true;
     bool vibration = false;
 
     public MOST_HapticFeedback.CustomHapticPattern cmp;
@@ -32,14 +32,14 @@ public class PlayerInput : MonoBehaviour
         }
         if (SystemInfo.supportsAccelerometer)
         {
-            gyro = true;
+            accel = true;
             InputSystem.EnableDevice(Accelerometer.current);
             Accelerometer.current.samplingFrequency = 60f;
         }
         else
         {
             Debug.Log("Device does not support gyro");
-            gyro = false;
+            accel = false;
         }
 
         factoredH = Screen.height / moveFactor; // calculate the pixel values for moves
@@ -74,7 +74,7 @@ public class PlayerInput : MonoBehaviour
             }
         }
 
-        if (gyro)
+        if (accel)
         {
             Accelerometer acc = Accelerometer.current;
             Vector3 value = acc.acceleration.ReadValue();
