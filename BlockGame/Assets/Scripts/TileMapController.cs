@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using Unity.Mathematics;
+using Unity.VectorGraphics;
 using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
@@ -58,6 +59,8 @@ public class TileMapController : MonoBehaviour
         {
             return;
         }
+
+        Matrix2D m = new() { };
 
         timeSinceMove += Time.deltaTime;
         if (timeSinceMove >= 1.0f)
@@ -181,6 +184,18 @@ public class TileMapController : MonoBehaviour
         }
 
         TM.SetTiles(currentTiles, getTileList(currentTiles.Length, tiles[0]));
+    }
+
+    void rotateCW()
+    {
+
+    }
+
+    void rotateACW()
+    {
+        TM.GetTransformMatrix(currentTiles[0]);
+        Matrix4x4 rotationMatrix = Matrix4x4.Rotate(Quaternion.AngleAxis(-90, new Vector3(0, 0, 1)));
+        Vector3 v = rotationMatrix * new Vector4(currentTiles[0].x, currentTiles[0].y, currentTiles[0].z, 1);
     }
 
     //make a send piece down function
