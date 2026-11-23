@@ -1,5 +1,6 @@
 using Solo.MOST_IN_ONE;
 using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
@@ -84,7 +85,17 @@ public class PlayerInput : MonoBehaviour
                 tmc.setPieceFreeze();
             }
         }
-        
+#if UNITY_EDITOR
+        else
+        {
+            if (Keyboard.current.fKey.wasPressedThisFrame)
+            {
+                Debug.Log("f key pressed");
+                tmc.setPieceFreeze();
+            }
+        }
+#endif
+
     }
 
     public void doVibration(int strength)

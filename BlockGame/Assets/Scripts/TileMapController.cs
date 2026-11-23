@@ -18,7 +18,7 @@ public class TileMapController : MonoBehaviour
     public PlayerInput PI;
     Vector3Int[] currentTiles;
     bool discardPiece;
-    Vector3Int[] ITiles = new Vector3Int[] { new(0, 0, 0), new(-1, 0, 0), new(1, 0, 0), new(2, 0, 0) };
+    Vector3Int[] ITiles = new Vector3Int[] { new(0, 0, 1), new(-1, 0, 0), new(1, 0, 0), new(2, 0, 0) };
     [SerializeField]
     Tilemap TM;
     [SerializeField]
@@ -54,7 +54,7 @@ public class TileMapController : MonoBehaviour
             discardPiece = tileCollision(currentTiles);
         }
 
-        if (pieceFreezeActive)
+        if (pieceFreezeActive == true)
         {
             return;
         }
@@ -134,7 +134,7 @@ public class TileMapController : MonoBehaviour
 
         foreach (Vector3Int t in leftmostTiles)
         {
-            if (t.x == -3) { return; }
+            if (t.x == -4) { return; }
             if (TM.GetTile(t + new Vector3Int(-1, 0, 0)) != null) { return; }
         }
 
@@ -227,13 +227,12 @@ public class TileMapController : MonoBehaviour
         if (pieceFreezeActive) {  return; }
         pieceFreezeActive = true;
         Debug.Log("Piece freeze enabled");
-        Debug.Log("Piece frozen");
-        disablePieceFreeze();
+        StartCoroutine(nameof(disablePieceFreeze));
     }
 
-    IEnumerable disablePieceFreeze()
+    IEnumerator disablePieceFreeze()
     {
-        yield return new WaitForSecondsRealtime(2f);
+        yield return new WaitForSeconds(2f);
         Debug.Log("Piece freeze disabled");
         pieceFreezeActive=false;
     }
